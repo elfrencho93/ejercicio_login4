@@ -10,5 +10,5 @@ if(isset($_SESSION['variable_de_session'])) {
 }
 
 ?>
-<a href="index.php">Sign Up</a><br>
+<a href="formulario.php">Sign Up</a><br>
 <a href="logout.php">Log out</a>
