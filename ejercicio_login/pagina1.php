@@ -1,14 +1,15 @@
 <?php
 session_start();
-if(isset($_SESSION['variable_de_session'])) {
-  echo '<p>' . $_SESSION['variable_de_session'] . '</p>';  
-    //echo $variable_normal;
-    echo "<h1>Contenido público</h1>";
-}else {
-    //header("Location:index.php");
-    echo "<h1>Contenido privada</h1>";
+if (isset($_SESSION['logged_in'])) {
+    // User is logged in
+    // Display the private content
+    echo "<h1>Hello World!</h1>";
+    echo "<p><a href='logout.php'>Log out</a></p>";
+} else {
+    // User is not logged in
+    // Display a message or redirect to the login page
+    echo "<h1>This content is private. Please log in or sign up to access it.</h1>";
+    echo "<p><a href='login.php'>Log In</a></p>";
+    echo "<p><a href='formulario.php'>Sign Up</a></p>";
 }
-
 ?>
-<a href="formulario.php">Sign Up</a><br>
-<a href="logout.php">Log out</a>

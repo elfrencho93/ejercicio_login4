@@ -3,42 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Ejemplo validación de formulario</title>
-    <style>
-        body{
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        }
-
-        div {
-            margin-top: 10px;
-        }
-
-        label{
-            display: block;
-        }
-
-        input[type="radio"] + label, input[type="checkbox"] + label {
-            display: inline;
-
-        }
-        button {
-            margin-top: 10px;
-        }
-    </style>
 </head>
 
 <body>
     <?php
     $errors = [];
-    function filter($data, $image_name, $image_size, $image_temp, $image_type){
+    $nombre = "";
+    $password = "";
+    $email = "";
+    $image = "";
 
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
     if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
-        $errors = [];
+        $image_name = $_FILES['fileToUpload']['name'];
+        $image_size = $_FILES['fileToUpload']['size'];
+        $image_temp = $_FILES['fileToUpload']['tmp_name'];
+        $image_type = $_FILES['fileToUpload']['type'];
+
+        function filter($data){
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+
         if(empty($_POST['nombre']) || preg_match("/[0-9]/", $_POST['nombre']) ){
             $errors[] = "El nombre no puede estar vacío y no puede contener números.";
         }
@@ -54,61 +43,67 @@
 
         $file_info = new finfo(FILEINFO_MIME_TYPE);
         $mime_type = $file_info->file($image_temp);
-        }
 
         $allowed_image_types = ['image/jpeg', 'image/jpg', 'image/png'];
-
-        //var_dump($errors);
 
         if(empty($errors)){
             $nombre = filter($_POST['nombre']);
             $password = filter($_POST['password']);
             $email = filter($_POST['email']);
             $image = filter($_POST['image']);
-        }
 
-        if(in_array($mime_type, $allowed_image_types) == false) {
-            echo "Elige un imágen de jpeg o png";
-        }
+            if(in_array($mime_type, $allowed_image_types) == false) {
+                $errors[] = "Elige un imágen de jpeg o png";
+            }
 
-        $upload_max_size = 2 * 1024 * 1024; //2MB
+            $upload_max_size = 2 * 1024 * 1024; //2MB
 
-        if($image_size > $upload_max_size) {
-            echo "El imágen no puede ser más de 2MB";
-        }
-    }
+            if($image_size > $upload_max_size) {
+                $errors[] = "El imágen no puede ser más de 2MB";
+            }
 
-    
-    ?>
-    <ul>
-        <?php if(isset($errors)){
-            foreach($errors as $error){
-                echo "<li>$error</li>";
+            if(empty($errors)){
+                // Lógica de subir el archivo
+                $target_dir = "uploads/";
+                $target_file = $target_dir . basename($image_name);
+                if (move_uploaded_file($image_temp, $target_file)) {
+                    echo "El archivo se ha subido correctamente.";
+                } else {
+                    $errors[] = "Hubo un error al subir el archivo.";
+                }
             }
         }
-        ?>
-    </ul>
-    <?php if(isset($_POST['submit'])): ?>
-    <h2><u>Has enviado los siguentes datos</u></h2>
-        <p>Nombre: <?php isset($nombre) ? print $nombre : "" ?></p>
-        <p>Password: <?php isset($password) ? print $password : "" ?></p>
-        <p>Email: <?php isset($email) ? print $email : "" ?></p>
-    <?php endif;?>
-    
-    <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    }
+    ?>
+    <?php if(!empty($errors)): ?>
+        <ul>
+            <?php foreach($errors as $error): ?>
+                <li><?= $error ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if(isset($_POST['submit']) && empty($errors)): ?>
+        <h2><u>Has enviado los siguientes datos</u></h2>
+        <p>Nombre: <?= htmlspecialchars($nombre) ?></p>
+        <p>Password: <?= htmlspecialchars($password) ?></p>
+        <p>Email: <?= htmlspecialchars($email) ?></p>
+    <?php endif; ?>
+
+    <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
         <div>
             <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" maxlength="50">
+            <input type="text" id="nombre" name="nombre" maxlength="50" value="<?= htmlspecialchars($nombre) ?>">
         </div>
 
         <div>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" maxlength="50">
+            <input type="password" id="password" name="password" maxlength="50" value="<?= htmlspecialchars($password) ?>">
         </div>
         
         <div>
             <label for="email">Email</label>
-            <input type="text" id="email" name="email">
+            <input type="text" id="email" name="email" value="<?= htmlspecialchars($email) ?>">
         </div>
 
         <div>
