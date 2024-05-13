@@ -64,11 +64,21 @@
                 $errors[] = "El imágen no puede ser más de 2MB";
             }
 
-            if(empty($errors)){
-                // Lógica de subir el archivo
+            if (empty($errors)) {
+                // Move the uploaded image to a designated folder
                 $target_dir = "uploads/";
-                $target_file = $target_dir . basename($image_name);
-                if (move_uploaded_file($image_temp, $target_file)) {
+                $target_file = $target_dir . basename($_FILES['fileToUpload']['name']);
+                if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target_file)) {
+                    // Store the data in a text file
+                    $data = [
+                        'nombre' => $_POST['nombre'],
+                        'password' => $_POST['password'],
+                        'email' => $_POST['email'],
+                        'image' => $_FILES['fileToUpload']['name']
+                    ];
+                    $data_string = json_encode($data);
+                    file_put_contents('user_data.txt', $data_string);
+        
                     echo "El archivo se ha subido correctamente.";
                 } else {
                     $errors[] = "Hubo un error al subir el archivo.";

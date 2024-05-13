@@ -5,10 +5,17 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     // Perform the login validation here
     // If the login is successful, set the session variable
-    $_SESSION['logged_in'] = true;
-    // Redirect the user to the private content page
-    header("Location: pagina1.php");
-    exit();
+    $data_string = file_get_contents('user_data.txt');
+    $data = json_decode($data_string, true);
+
+    if ($_POST['username'] == $data['nombre'] && $_POST['password'] == $data['password']) {
+        $_SESSION['logged_in'] = true;
+        // Redirect the user to the private content page
+        header("Location: pagina1.php");
+        exit();
+    } else {
+        echo "Invalid username or password.";
+    }
 }
 ?>
 
