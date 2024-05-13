@@ -21,7 +21,7 @@
       // User is not logged in
       // Display the public content
         echo "<p><a href='login.php'>Log In</a></p>";
-        echo "<a href='formulario.php'>Sign Up</a>";
+        echo "<p><a href='formulario.php'>Sign Up</a><p>";
     }
   ?>
   </nav>

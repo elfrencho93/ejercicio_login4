@@ -22,11 +22,13 @@
         $image_type = $_FILES['fileToUpload']['type'];
 
         function filter($data){
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
+            if ($data !== null) {
+                $data = trim($data);
+                $data = stripslashes($data);
+                $data = htmlspecialchars($data);
+            }
             return $data;
-        }
+        }        
 
         if(empty($_POST['nombre']) || preg_match("/[0-9]/", $_POST['nombre']) ){
             $errors[] = "El nombre no puede estar vacío y no puede contener números.";
