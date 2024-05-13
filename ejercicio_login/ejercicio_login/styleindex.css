@@ -1,0 +1,36 @@
+body {
+    background: #0067b1;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+  
+nav {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: center;
+}
+  
+section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+  
+article {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+  
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
