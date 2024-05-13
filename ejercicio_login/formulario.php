@@ -48,11 +48,11 @@
 
         $allowed_image_types = ['image/jpeg', 'image/jpg', 'image/png'];
 
-        if(empty($errors)){
+        if (empty($errors)) {
             $nombre = filter($_POST['nombre']);
             $password = filter($_POST['password']);
             $email = filter($_POST['email']);
-            $image = filter($_POST['image']);
+            $image = $image_name;
 
             if(in_array($mime_type, $allowed_image_types) == false) {
                 $errors[] = "Elige un imágen de jpeg o png";
@@ -90,6 +90,8 @@
         <p>Nombre: <?= htmlspecialchars($nombre) ?></p>
         <p>Password: <?= htmlspecialchars($password) ?></p>
         <p>Email: <?= htmlspecialchars($email) ?></p>
+        <p>You may log in now.</p>
+        <p><a href="login.php">Log In</a></p>
     <?php endif; ?>
 
     <form action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
